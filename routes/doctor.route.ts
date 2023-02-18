@@ -1,58 +1,102 @@
 import express, { Request, Response } from "express";
 
+import get_doctorinfo from '../queries/doctor/get_doctorinfo'
+import post_doctorinfo from '../queries/doctor/post_doctorinfo'
+import get_patientlist from '../queries/doctor/get_patientlist'
+import add_patient from "../queries/doctor/add_patient";
+import remove_patient from '../queries/doctor/remove_patient'
+import post_record from '../queries/doctor/post_record'
+
 const doctorRouter = express.Router();
 
 // route to get doctor information
-doctorRouter.get("/doctorinfo/", (req: Request, res: Response) => {
+doctorRouter.get("/doctorinfo/", async(req: Request, res: Response) => {
     let doctorUsername = req.query.username as string;
-
     // code to get doctor information using doctor username
+    const doctorInfo = await get_doctorinfo(doctorUsername)
+    if(doctorInfo === null) {
+       res.status(400).json({message: "Doctor not found"})
+    } else {
+        res.json(
+            doctorInfo
+        );
+    }
+});
 
+// route to post doctor information
+doctorRouter.post("/doctorinfo/", async(req: Request, res: Response) => {
+    let requestInfo = req.body
+    // code to get doctor information using doctor username
+    const status = await post_doctorinfo(requestInfo)
+    if(!status) {
+       return res.statusCode = 400
+    }
     res.json({
-        doctorUsername: doctorUsername,
+        statusCode: 200
     });
 });
 
 // route to get a doctors patientList
-doctorRouter.get("/patientlist/", (req: Request, res: Response) => {
-
+doctorRouter.get("/patientlist/", async(req: Request, res: Response) => {
     let doctorUsername = req.query.username as string;
-
     // code to get patient list of a doctor from the database
-
-    res.json({doctorUsername});
+    const patientlist = await get_patientlist(doctorUsername)
+    if(patientlist === null) {
+       res.status(400).json({message: "Doctor not found"})
+    } else {
+        res.json(
+            patientlist
+        );
+    }
 });
 
 // route to add a patient to a doctors list
-doctorRouter.post("/patientlist/", (req: Request, res: Response) => {
+doctorRouter.post("/patientlist/", async(req: Request, res: Response) => {
     const body: {
         patientUsername: string;
         doctorUsername: string;
         action: string;
     } = req.body;
 
-    // code to add or remove a patient to a specific doctor
-
     if (body.action == "add") {
+        let results = await add_patient(body.doctorUsername, body.patientUsername)
+        res.json(results);
     } else if (body.action == "remove") {
+        let results = await remove_patient(body.doctorUsername, body.patientUsername)
+        res.json(results);
+    } else {
+        res.status(400).json({"message": "Invalid action (should 'remove' or 'add')"})
     }
-
-    res.json(body);
 });
 
 // route for a doctor to create a health record for a patient
-doctorRouter.post("/record-add/", (req: Request, res: Response) => {
+doctorRouter.post("/record-add/", async(req: Request, res: Response) => {
     const body: {
         patientUsername: string;
         doctorUsername: string;
-        date: string;
         log: string;
         subject: string;
     } = req.body;
 
+    // create new object with the doctor name and clinic
+    const doctorInfo = await get_doctorinfo(body.doctorUsername)
+    if(doctorInfo === null) {
+       res.status(400).json({message: "Doctor not found"})
+       return
+    }
+    let record = {
+        doctorName: doctorInfo.firstname + ' ' + doctorInfo.lastname,
+        ...body
+    }
+    
     // code to add a patient record to the database
-
-    res.json(body);
+    const status = await post_record(record)
+    if(!status) {
+       return res.statusCode = 400
+    }
+    res.json({
+        statusCode: 200
+    });
 });
 
 export default doctorRouter;

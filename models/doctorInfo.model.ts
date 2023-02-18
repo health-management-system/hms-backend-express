@@ -5,7 +5,7 @@ const doctorInfoSchema = new Schema({
     firstname: String,
     lastname: String,
     staffId: String,
-    specialization: [String],
+    specialization: String,
     email: String,
     phoneNumber: String,
 })
