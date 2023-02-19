@@ -6,6 +6,7 @@ import get_patientlist from '../queries/doctor/get_patientlist'
 import add_patient from "../queries/doctor/add_patient";
 import remove_patient from '../queries/doctor/remove_patient'
 import post_record from '../queries/doctor/post_record'
+import update_doctorinfo from "../queries/doctor/update_doctorInfo";
 
 const doctorRouter = express.Router();
 
@@ -26,14 +27,22 @@ doctorRouter.get("/doctorinfo/", async(req: Request, res: Response) => {
 // route to post doctor information
 doctorRouter.post("/doctorinfo/", async(req: Request, res: Response) => {
     let requestInfo = req.body
-    // code to get doctor information using doctor username
-    const status = await post_doctorinfo(requestInfo)
-    if(!status) {
-       return res.statusCode = 400
+    // Check if doctor already exists
+    const existingDoctor = await get_doctorinfo(requestInfo.username)
+    if(existingDoctor === null) {
+        // Create new document
+        const status = await post_doctorinfo(requestInfo)
+        if(!status) {
+            return res.statusCode = 400
+        }
+        return res.status(200).json({"message": 'Created a new doctor info document'})
+    } else {
+        // Update exisitng document
+        const status = await update_doctorinfo(requestInfo)
+        return res.status(status.code).json({"message": status.message}) 
     }
-    res.json({
-        statusCode: 200
-    });
+    // code to get doctor information using doctor username
+    
 });
 
 // route to get a doctors patientList
