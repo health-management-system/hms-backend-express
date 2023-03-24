@@ -3,6 +3,7 @@ import get_patientinfo from "../queries/patient/get_patientinfo";
 import get_records from "../queries/patient/get_records";
 import post_patientinfo from "../queries/patient/post_patientinfo";
 import update_patientinfo from "../queries/patient/update_patientInfo";
+import get_record from "../queries/patient/get_record";
 
 const patientRouter = express.Router();
 
@@ -39,14 +40,14 @@ patientRouter.post("/register/", async(req: Request, res: Response) => {
     const patientInfo = await get_patientinfo(body.username)
     if(patientInfo === null) {
         const status = await post_patientinfo(body)
-        if(status) { return res.status(200).json({"message": "Created a new patient info"}) }
+        if(status) { return res.status(201).json({"message": "Created a new patient info"}) }
      } else {
         const result = await update_patientinfo(body)
         return res.status(result.code).json({"message": result.message}) 
      }
 });
 
-patientRouter.get("/record/", async(req: Request, res: Response) => {
+patientRouter.get("/records/", async(req: Request, res: Response) => {
     const username = req.query.username as string;
     const pageNumber = parseInt(req.query.page as string);
     const pageSize = 10
@@ -63,6 +64,23 @@ patientRouter.get("/record/", async(req: Request, res: Response) => {
        return
     } 
     res.json(records)
+});
+
+patientRouter.get("/record/", async(req: Request, res: Response) => {
+    const recordid = req.query.recordid as string;
+
+    // check pageNumber query parameter
+    if(!recordid) {
+        res.status(400).json({message: "Invalid page number"})
+    }
+
+    // check if username is valid
+    const record = await get_record(recordid)
+    if(record === null) {
+       res.status(400).json({message: "Record not found"})
+       return
+    } 
+    res.json(record)
 });
 
 export default patientRouter;
