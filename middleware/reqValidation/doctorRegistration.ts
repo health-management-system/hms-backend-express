@@ -1,7 +1,8 @@
+
 import { checkSchema } from "express-validator";
 import PatientInfoModel from "../../models/patientInfo.model";
 
-export const patientRegistrationVal = checkSchema({
+export const doctorRegistrationVal = checkSchema({
     email: {
         isEmail: true,
         normalizeEmail: true,
@@ -46,4 +47,3 @@ export const patientRegistrationVal = checkSchema({
         errorMessage: "Lastname must only contain alphabets"
     },
 });
-
