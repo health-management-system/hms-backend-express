@@ -23,6 +23,10 @@ const doctorInfoSchema = new Schema({
         },
     },
     phoneNumber: { type: String, default: null },
+    clinic: {
+        type: String,
+        default: null,
+    },
 });
 
 const DoctorInfoModel = mongoose.model("DoctorInfo", doctorInfoSchema);
