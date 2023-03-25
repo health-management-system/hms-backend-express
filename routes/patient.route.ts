@@ -33,7 +33,7 @@ patientRouter.post("/register/", async(req: Request, res: Response) => {
         phoneNumber: string;
         address: string;
         postalCode: string;
-        healthCardNumber: string;
+        healthCardNo: string;
     } = req.body;
 
     // See if patient exists
