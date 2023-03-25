@@ -7,6 +7,7 @@ import add_patient from "../queries/doctor/add_patient";
 import remove_patient from '../queries/doctor/remove_patient'
 import post_record from '../queries/doctor/post_record'
 import update_doctorinfo from "../queries/doctor/update_doctorInfo";
+import get_patients from "../queries/doctor/get_patients";
 
 const doctorRouter = express.Router();
 
@@ -107,5 +108,18 @@ doctorRouter.post("/record-add/", async(req: Request, res: Response) => {
         statusCode: 200
     });
 });
+
+doctorRouter.get("/getpatients/", async(req: Request, res: Response) => {
+    const pageNumber = parseInt(req.query.page as string);
+    const pageSize = 10
+
+    // check pageNumber query parameter
+    if(isNaN(pageNumber) && pageNumber < 1) {
+        res.status(400).json({message: "Invalid page number"})
+    }
+
+    const patients = await get_patients(pageNumber, pageSize)
+    res.json(patients) 
+})
 
 export default doctorRouter;
