@@ -96,6 +96,7 @@ doctorRouter.post("/record-add/", async(req: Request, res: Response) => {
     }
     let record = {
         doctorName: doctorInfo.firstname + ' ' + doctorInfo.lastname,
+        clinic: doctorInfo.clinic,
         ...body
     }
     

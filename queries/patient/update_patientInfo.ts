@@ -31,7 +31,7 @@ async function update_patientinfo(info: any): Promise<UpdatePatientResult> {
     patientinfo.phoneNumber = info.phoneNumber
     patientinfo.address = info.address
     patientinfo.postalCode = info.postalCode
-    patientinfo.healthCardNo = info.healthCardNumber
+    patientinfo.healthCardNo = info.healthCardNo
     await patientinfo.save()
     return {
         success : true,
