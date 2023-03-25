@@ -40,6 +40,12 @@ authRouter.post(
     "/register-doctor",
     doctorRegistrationVal,
     async (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res
+                .status(400)
+                .json({ statusCode: 400, errors: errors.array() });
+        }
         let requestBody = req.body as {
             email: string;
             password: string;
