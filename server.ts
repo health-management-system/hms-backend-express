@@ -21,7 +21,13 @@ async function startServer() {
     // middleware
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    app.use(cors({ origin: true }));
+    app.use(
+        cors({
+            origin: "http://localhost:3000",
+            methods: ["POST", "PUT", "GET", "OPTIONS", "HEAD"],
+            credentials: true,
+        })
+    );
     app.use(cookieParser());
 
     // routers
