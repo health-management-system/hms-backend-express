@@ -1,5 +1,4 @@
-import mongoose from "mongoose"
-
+import mongoose from "mongoose";
 
 const patientInfoSchema = new mongoose.Schema({
     username: String,
@@ -11,7 +10,7 @@ const patientInfoSchema = new mongoose.Schema({
     address: String,
     postalCode: String,
     healthCardNo: String,
-})
+});
 
 const PatientInfoModel = mongoose.model("PatientInfo", patientInfoSchema);
 
