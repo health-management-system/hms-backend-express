@@ -3,7 +3,7 @@ import patientRecordSchema from '../../models/patientRecord.model'
 async function get_records(username: string, pageNumber: number, pageSize: number) {
     let start_index = (pageNumber-1)*10
     let count = await patientRecordSchema.count({patientUsername: username})
-    let records = await patientRecordSchema.find({patientUsername: username}).skip(start_index).limit(pageSize)
+    let records = await patientRecordSchema.find({patientUsername: username}).skip(start_index).limit(pageSize).sort({date: -1})
     if(!records) {
         return null
     }
