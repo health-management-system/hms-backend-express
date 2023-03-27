@@ -103,11 +103,15 @@ doctorRouter.post("/record-add/", async(req: Request, res: Response) => {
     // code to add a patient record to the database
     const status = await post_record(record)
     if(!status) {
-       return res.statusCode = 400
+        res.status(400)
+        res.json({
+            statusCode: 400
+        });
+    } else {
+        res.json({
+            statusCode: 200
+        });
     }
-    res.json({
-        statusCode: 200
-    });
 });
 
 doctorRouter.get("/getpatients/", async(req: Request, res: Response) => {
