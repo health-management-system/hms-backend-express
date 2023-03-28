@@ -4,6 +4,7 @@ import get_records from "../queries/patient/get_records";
 import post_patientinfo from "../queries/patient/post_patientinfo";
 import update_patientinfo from "../queries/patient/update_patientInfo";
 import get_record from "../queries/patient/get_record";
+import { StatusCodes } from 'http-status-codes';
 
 const patientRouter = express.Router();
 
@@ -14,7 +15,7 @@ patientRouter.get("/patientinfo/", async(req, res) => {
     // code to check if username exist in database
     const patientInfo = await get_patientinfo(username)
     if(patientInfo === null) {
-       res.status(400).json({message: "Patient not found"})
+       res.status(StatusCodes.NOT_FOUND).json({message: "Patient not found"})
     } else {
         res.json(
             patientInfo

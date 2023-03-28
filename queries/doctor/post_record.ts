@@ -1,12 +1,23 @@
-import PatientRecordSchema from '../../models/patientRecord.model'
+import PatientRecordSchema from "../../models/patientRecord.model";
 
-async function post_record(info: any) {
-    if(!info.patientUsername) { return false }
+type PostRecordParams = {
+    doctorUsername: string;
+    clinic: string;
+    doctorName: string;
+    patientUsername: string;
+    subject: string;
+    log: string;
+};
+
+async function post_record(info: PostRecordParams) {
+    if (!info.patientUsername) {
+        return false;
+    }
     var record = new PatientRecordSchema({
-        ...info
-    })
-    await record.save()
-    return true
+        ...info,
+    });
+    await record.save();
+    return true;
 }
 
 export default post_record;
