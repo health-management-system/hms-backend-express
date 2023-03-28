@@ -117,13 +117,21 @@ doctorRouter.post("/record-add/", async(req: Request, res: Response) => {
 doctorRouter.get("/getpatients/", async(req: Request, res: Response) => {
     const pageNumber = parseInt(req.query.page as string);
     const pageSize = 10
+    const searchQuery = req.query.searchQuery as string
 
     // check pageNumber query parameter
     if(isNaN(pageNumber) && pageNumber < 1) {
         res.status(400).json({message: "Invalid page number"})
     }
 
-    const patients = await get_patients(pageNumber, pageSize)
+    let searchString
+    if(!searchQuery) { 
+        searchString = ""
+    } else {
+        searchString = searchQuery
+    }
+
+    const patients = await get_patients(pageNumber, pageSize, searchString)
     res.json(patients) 
 })
 
