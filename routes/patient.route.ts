@@ -51,14 +51,22 @@ patientRouter.get("/records/", async(req: Request, res: Response) => {
     const username = req.query.username as string;
     const pageNumber = parseInt(req.query.page as string);
     const pageSize = 10
+    const searchQuery = req.query.searchQuery as string;
 
     // check pageNumber query parameter
     if(isNaN(pageNumber) && pageNumber < 1) {
         res.status(400).json({message: "Invalid page number"})
     }
 
+    let searchString
+    if(!searchQuery) {
+        searchString = ""
+    } else {
+        searchString = searchQuery
+    }
+
     // check if username is valid
-    const records = await get_records(username, pageNumber, pageSize)
+    const records = await get_records(username, pageNumber, pageSize, searchString)
     if(records === null) {
        res.status(400).json({message: "Invalid patient username"})
        return
