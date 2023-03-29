@@ -1,4 +1,3 @@
-import { afterEach } from "node:test";
 import dotenv from "dotenv";
 import configureMongoose from "../mongo/mongoConfig";
 dotenv.config();
