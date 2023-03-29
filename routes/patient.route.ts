@@ -4,6 +4,7 @@ import get_records from "../queries/patient/get_records";
 import post_patientinfo from "../queries/patient/post_patientinfo";
 import update_patientinfo from "../queries/patient/update_patientInfo";
 import get_record from "../queries/patient/get_record";
+import { StatusCodes } from 'http-status-codes';
 
 const patientRouter = express.Router();
 
@@ -14,7 +15,7 @@ patientRouter.get("/patientinfo/", async(req, res) => {
     // code to check if username exist in database
     const patientInfo = await get_patientinfo(username)
     if(patientInfo === null) {
-       res.status(400).json({message: "Patient not found"})
+       res.status(StatusCodes.NOT_FOUND).json({message: "Patient not found"})
     } else {
         res.json(
             patientInfo
@@ -54,8 +55,9 @@ patientRouter.get("/records/", async(req: Request, res: Response) => {
     const searchQuery = req.query.searchQuery as string;
 
     // check pageNumber query parameter
-    if(isNaN(pageNumber) && pageNumber < 1) {
-        res.status(400).json({message: "Invalid page number"})
+    if(isNaN(pageNumber) || pageNumber < 1) {
+        res.status(StatusCodes.BAD_REQUEST).json({message: "Invalid page number"})
+        return;
     }
 
     let searchString
@@ -67,10 +69,7 @@ patientRouter.get("/records/", async(req: Request, res: Response) => {
 
     // check if username is valid
     const records = await get_records(username, pageNumber, pageSize, searchString)
-    if(records === null) {
-       res.status(400).json({message: "Invalid patient username"})
-       return
-    } 
+
     res.json(records)
 });
 
@@ -79,13 +78,14 @@ patientRouter.get("/record/", async(req: Request, res: Response) => {
 
     // check pageNumber query parameter
     if(!recordid) {
-        res.status(400).json({message: "Invalid page number"})
+        res.status(StatusCodes.BAD_REQUEST).json({message: "record id required"})
+        return
     }
 
     // check if username is valid
     const record = await get_record(recordid)
     if(record === null) {
-       res.status(400).json({message: "Record not found"})
+       res.status(StatusCodes.NOT_FOUND).json({message: "Record not found"})
        return
     } 
     res.json(record)
