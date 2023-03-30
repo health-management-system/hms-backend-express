@@ -13,9 +13,9 @@ async function get_records(username: string, pageNumber: number, pageSize: numbe
     let start_index = (pageNumber-1)*10
     let count = await patientRecordSchema.find(queryReq).count()
     let records = await patientRecordSchema.find(queryReq).skip(start_index).limit(pageSize).sort({date: -1})
-    if(!records) {
-        return null
-    }
+    // if(!records) {
+    //     return null
+    // }
     let pages = Math.floor(count / pageSize) + 1
     return {
         pageCount: pages,
