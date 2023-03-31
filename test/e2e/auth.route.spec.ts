@@ -57,7 +57,7 @@ describe("auth ECE Test",()=>{
                 email: patientinformation.email,
                 username:patientinformation.username2,
                 password: patientinformation.password,
-                confirmPassword: patientinformation.password,
+                confirmPassword: patientinformation.password + "invalid",
                 firstname: patientinformation.firstname,
                 lastname: patientinformation.lastname
             });
@@ -90,7 +90,7 @@ describe("auth ECE Test",()=>{
                 email: Doctorinformation.email,
                 username:Doctorinformation.username2,
                 password: Doctorinformation.password,
-                confirmPassword: Doctorinformation.password,
+                confirmPassword: Doctorinformation.password + "hello",
                 firstname: Doctorinformation.firstname,
                 lastname: Doctorinformation.lastname
             });

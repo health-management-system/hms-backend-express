@@ -32,10 +32,7 @@ doctorRouter.post("/doctorinfo/", async(req: Request, res: Response) => {
     const existingDoctor = await get_doctorinfo(requestInfo.username)
     if(existingDoctor === null) {
         // Create new document
-        const status = await post_doctorinfo(requestInfo)
-        if(!status) {
-            return res.statusCode = 400
-        }
+        await post_doctorinfo(requestInfo)
         return res.status(200).json({"message": 'Created a new doctor info document'})
     } else {
         // Update exisitng document
@@ -120,8 +117,9 @@ doctorRouter.get("/getpatients/", async(req: Request, res: Response) => {
     const searchQuery = req.query.searchQuery as string
 
     // check pageNumber query parameter
-    if(isNaN(pageNumber) && pageNumber < 1) {
+    if(isNaN(pageNumber) || pageNumber < 1) {
         res.status(400).json({message: "Invalid page number"})
+        return
     }
 
     let searchString
