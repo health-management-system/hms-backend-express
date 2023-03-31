@@ -242,22 +242,20 @@ describe("PATIENT ROUTE E2E", () => {
         });
 
         it("SHOULD send an error if recordid isn't passed to the request", async () => {
-            const response = await appRequest.get(
-                patientPath + "record"
-            );
+            const response = await appRequest.get(patientPath + "record");
             expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST);
-            expect(response.body).toHaveProperty("message")
-            expect(response.body.message).toBeTruthy()
+            expect(response.body).toHaveProperty("message");
+            expect(response.body.message).toBeTruthy();
         });
 
-        it("SHOULD send an error if recordid does not exist", async()=>{
-                const response = await appRequest.get(
-                    patientPath + "record?recordid=" + "invalid"
-                );
+        it("SHOULD send an error if recordid does not exist", async () => {
+            const response = await appRequest.get(
+                patientPath + "record?recordid=" + "invalid"
+            );
             expect(response.statusCode).toBe(StatusCodes.NOT_FOUND);
-            expect(response.body).toHaveProperty("message")
-            expect(response.body.message).toBeTruthy()
-        })
+            expect(response.body).toHaveProperty("message");
+            expect(response.body.message).toBeTruthy();
+        });
     });
 });
 async function setupRecords(
@@ -293,7 +291,7 @@ async function setupRecords(
         password: doctor.password,
     });
     // update doctor
-    update_doctorinfo({
+    await update_doctorinfo({
         email: doctor.email,
         username: doctor.username,
         clinic: doctor.clinic,
