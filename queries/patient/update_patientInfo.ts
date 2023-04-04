@@ -6,7 +6,18 @@ type UpdatePatientResult = {
     code : number
 }
 
-async function update_patientinfo(info: any): Promise<UpdatePatientResult> {
+type UpdatePatientParams = {
+    username:string;
+    firstname:string,
+    lastname: string;
+    dateOfBirth: string;
+    email:string,
+    phoneNumber: string;
+    address: string,
+    postalCode:string,
+    healthCardNo: string,
+}
+async function update_patientinfo(info: UpdatePatientParams): Promise<UpdatePatientResult> {
     let patientinfo = await patientInfoSchema.findOne({username: info.username})
     if(!patientinfo) {
         return {
