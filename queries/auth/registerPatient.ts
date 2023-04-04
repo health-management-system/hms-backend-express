@@ -2,7 +2,7 @@ import { StatusCodes, ReasonPhrases } from "http-status-codes";
 import PatientInfoModel from "../../models/patientInfo.model";
 import bcrypt from "bcrypt";
 
-type RegisterPatientParams = {
+export type RegisterPatientParams = {
     email: string;
     password: string;
     username: string;
