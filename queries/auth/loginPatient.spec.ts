@@ -1,6 +1,8 @@
 import { loginPatient } from './loginPatient';
 import { StatusCodes } from 'http-status-codes';
 import { registerPatient } from './registerPatient';
+import post_patientinfo from '../patient/post_patientinfo';
+
 describe("TEST LOGIN DOCTOR QUERY", ()=>{
     it("SHOULD FAIL if user is not found", async()=>{
         // create user
@@ -43,5 +45,27 @@ describe("TEST LOGIN DOCTOR QUERY", ()=>{
         expect(response.result!.role).toBe("PATIENT")
         expect(response.success).toBe(true)
         expect(response.message).toBeTruthy()
+    })
+
+    it('Stops login for users without a password', async() => {
+        const testPatient = {
+            username: 'tstpatient3',
+            firstname: 'Patient',
+            lastname: 'Test',
+            dateOfBirth: '10/10/1995',
+            email: 'testpatient@test.com',
+            phoneNumber: '613-123-1234',
+            address: '123 main st',
+            postalCode: 'N2L 0N4',
+            healthCardNo: '123456'
+        };
+
+        await post_patientinfo(testPatient)
+
+        // login with credential
+        const response = await loginPatient({username: testPatient.username, password: ""})
+
+        // Assertions
+        expect(response.success).toBe(false)
     })
 })

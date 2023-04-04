@@ -35,7 +35,7 @@ describe('post_record function', () => {
   it('should return false if patientUsername is not provided', async () => {
     // Arrange
     const info = {
-        patientUsername: "test-patient6",
+        patientUsername: "",
         doctorUsername: "test-doctor6",
         doctorName: "Test doctor",
         clinic: "Waterloo",

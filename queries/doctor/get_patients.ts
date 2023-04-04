@@ -12,7 +12,6 @@ async function get_patients(pageNumber: number, pageSize: number, searchQuery: s
         queryReq,
         {"firstname": 1, "lastname": 1, "username": 1}
     ).skip(start_index).limit(pageSize)
-    if(!patients) { return null }
     let pages = Math.floor(count / pageSize) + 1
     return {
         pageCount: pages,

@@ -20,7 +20,7 @@ describe("post_doctorinfo function", () => {
 
     // Verify that the doctor's info is saved in the database
     const savedDoctorInfo = await doctorInfoSchema.findOne({
-      username: "test-doctor"
+      username: "test-doctor4"
     });
     expect(savedDoctorInfo).toBeDefined();
     expect(savedDoctorInfo?.username).toBe("test-doctor4");

@@ -8,7 +8,7 @@ describe("get_patients", () => {
     const pageSize = 10;
 
     // Call the function being tested
-    const result = await get_patients(pageNumber, pageSize);
+    const result = await get_patients(pageNumber, pageSize, "");
 
     // Expect the result to have the expected properties
     expect(result).toHaveProperty("pageCount");
@@ -35,9 +35,9 @@ describe("get_patients", () => {
     jest.spyOn(PatientInfoSchema, "count").mockResolvedValueOnce(0);
 
     // Call the function being tested
-    const result = await get_patients(pageNumber, pageSize);
+    const result = await get_patients(pageNumber, pageSize, "");
 
     // Expect the result to be null
-    expect(result).toBeNull();
+    expect(result?.patients).toHaveLength(0);
   });
 });

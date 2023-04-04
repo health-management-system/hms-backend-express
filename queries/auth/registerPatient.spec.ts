@@ -44,8 +44,15 @@ describe("registerPatient function", () => {
 
   it("should return a CONFLICT error message when the username already exists", async () => {
     // Arrange
-    const params: RegisterPatientParams = {
+    const params1: RegisterPatientParams = {
       email: "newemail@example.com",
+      password: "mypassword",
+      username: "existingusername",
+      firstname: "John",
+      lastname: "Doe",
+    };
+    const params2: RegisterPatientParams = {
+      email: "newemail@example1.com",
       password: "mypassword",
       username: "existingusername",
       firstname: "John",
@@ -53,8 +60,36 @@ describe("registerPatient function", () => {
     };
 
     // Act
-    const result1 = await registerPatient(params);
-    const result2 = await registerPatient(params);
+    const result1 = await registerPatient(params1);
+    const result2 = await registerPatient(params2);
+
+    // Assert
+    expect(result1.success).toBe(true);
+    expect(result2.success).toBe(false);
+    expect(result2.statusCode).toBe(StatusCodes.CONFLICT);
+    expect(result2.message).toMatch(/already exists/);
+  });
+
+  it("should return a CONFLICT error message when the email already exists", async () => {
+    // Arrange
+    const params1: RegisterPatientParams = {
+      email: "newemail@example.com",
+      password: "mypassword",
+      username: "existingusername1",
+      firstname: "John",
+      lastname: "Doe",
+    };
+    const params2: RegisterPatientParams = {
+      email: "newemail@example.com",
+      password: "mypassword",
+      username: "existingusername2",
+      firstname: "John",
+      lastname: "Doe",
+    };
+
+    // Act
+    const result1 = await registerPatient(params1);
+    const result2 = await registerPatient(params2);
 
     // Assert
     expect(result1.success).toBe(true);
