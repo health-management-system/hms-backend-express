@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { registerPatient, RegisterPatientParams } from "./registerPatient";
+import PatientInfoModel from "../../models/patientInfo.model";
 
 describe("registerPatient function", () => {
   it("should return a success message when given valid input", async () => {
@@ -97,4 +98,26 @@ describe("registerPatient function", () => {
     expect(result2.statusCode).toBe(StatusCodes.CONFLICT);
     expect(result2.message).toMatch(/already exists/);
   });
+    it("returns an error if something is wrong with mongo", async () => {
+              let MongoPatientCreateMock = jest.spyOn(PatientInfoModel, "create");
+        MongoPatientCreateMock.mockImplementation((...event: any[]) => {
+            throw new Error();
+        });
+
+        const result = await registerPatient({
+            email: "test@gmail.com",
+            firstname: "test",
+            lastname: "test",
+            password: "test",
+            username: "test",
+        });
+
+        expect(result).toHaveProperty("success", false);
+        expect(result).toHaveProperty(
+            "statusCode",
+            StatusCodes.INTERNAL_SERVER_ERROR
+        );
+        expect(result).toHaveProperty("message");
+        MongoPatientCreateMock.mockRestore();
+    })
 });
