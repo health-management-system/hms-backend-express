@@ -1,7 +1,8 @@
-import { loginDoctor } from './loginDoctor';
+import { loginPatient } from './loginPatient';
 import { StatusCodes } from 'http-status-codes';
-import { registerDoctor } from './registerDoctor';
-import post_doctorinfo from '../doctor/post_doctorinfo';
+import { registerPatient } from './registerPatient';
+import post_patientinfo from '../patient/post_patientinfo';
+
 describe("TEST LOGIN DOCTOR QUERY", ()=>{
     it("SHOULD FAIL if user is not found", async()=>{
         // create user
@@ -11,7 +12,7 @@ describe("TEST LOGIN DOCTOR QUERY", ()=>{
         }
 
         // login with credential
-        const response = await loginDoctor({username: testUser.username, password: testUser.password})
+        const response = await loginPatient({username: testUser.username, password: testUser.password})
 
         // checks
         expect(response.statusCode).toBe(StatusCodes.UNAUTHORIZED)
@@ -30,38 +31,39 @@ describe("TEST LOGIN DOCTOR QUERY", ()=>{
             password: "test"
         }
 
-        // registers doctor
-        await registerDoctor(testUser)
+        // registers Patient
+        await registerPatient(testUser)
 
         // login with credential
-        const response = await loginDoctor({username: testUser.username, password: testUser.password})
+        const response = await loginPatient({username: testUser.username, password: testUser.password})
 
         // checks
         expect(response.statusCode).toBe(StatusCodes.OK)
         expect(response.result).toHaveProperty("username")
         expect(response.result).toHaveProperty("role")
         expect(response.result!.username).toBe(testUser.username)
-        expect(response.result!.role).toBe("DOCTOR")
+        expect(response.result!.role).toBe("PATIENT")
         expect(response.success).toBe(true)
         expect(response.message).toBeTruthy()
     })
 
     it('Stops login for users without a password', async() => {
-        const testDoctor = {
-            username: 'tstdoctor3',
-            firstname: 'Doctor',
+        const testPatient = {
+            username: 'tstpatient3',
+            firstname: 'Patient',
             lastname: 'Test',
-            staffId: '1234',
-            specialization: 'General Doctor',
-            phoneNumber: '613-123-1213',
-            clinic: 'Waterloo',
-            email: 'testdoctor@test.com',
+            dateOfBirth: '10/10/1995',
+            email: 'testpatient@test.com',
+            phoneNumber: '613-123-1234',
+            address: '123 main st',
+            postalCode: 'N2L 0N4',
+            healthCardNo: '123456'
         };
 
-        await post_doctorinfo(testDoctor)
+        await post_patientinfo(testPatient)
 
         // login with credential
-        const response = await loginDoctor({username: testDoctor.username, password: ""})
+        const response = await loginPatient({username: testPatient.username, password: ""})
 
         // Assertions
         expect(response.success).toBe(false)

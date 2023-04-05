@@ -8,62 +8,59 @@ type AddPatientResult = {
     code: number
 }
 
-async function add_patient(doctorUsername: string, patientUsername: string) : Promise<AddPatientResult> {
+async function remove_patient(doctorUsername: string, patientUsername: string) : Promise<AddPatientResult> {
 
     // TODO: check if doctor exists DoctorInfo Table
-    let existingDoctor = await DoctorInfoSchema.findOne({username: doctorUsername})
-    if(!existingDoctor) {
+          // Check if doctor exists in DoctorInfo Table
+    const existingDoctor = await DoctorInfoSchema.findOne({ username: doctorUsername })
+        if (!existingDoctor) {
+            return {
+                success: false,
+                message: "Doctor does not exist",
+                code: 400
+            }
+        }
+    
+        // Check if patient exists in PatientInfo Table
+        const patientinfo = await patientInfoSchema.findOne({ username: patientUsername })
+        if (!patientinfo) {
+            return {
+                success: false,
+                message: "Patient does not exist",
+                code: 400
+            }
+        }
+    
+        // Check if patient is in doctor list
+        const patientList = await PatientListSchema.findOne({ doctorUsername: doctorUsername })
+        if (!patientList) {
+            return {
+                success: false,
+                message: "Patient is not in the list",
+                code: 400
+            }
+        }
+    
+        const index = patientList.patientList.findIndex(patient => patient.patientUsername === patientUsername)
+        if (index === -1) {
+            return {
+                success: false,
+                message: "Patient is not in the list",
+                code: 400
+            }
+        }
+    
+        // Remove patient from the patient list
+        patientList.patientList.splice(index, 1)
+        await patientList.save()
+    
         return {
-            success: false,
-            message: "Doctor does not exist",
-            code : 400
-        }
-    }
-
-    // TODO: check if patient exists in PatientInfo Table (return result)
-    let patientinfo = await patientInfoSchema.findOne({username: patientUsername})
-    if(!patientinfo) {
-        return {
-            success: false,
-            message: "Patient does not exist",
-            code : 400
-        }
-    }
-
-    // Check if doctor has an existing patient list if not create a ne
-    let patientList = await PatientListSchema.findOne({doctorUsername: doctorUsername})
-
-    // If it does not exist create a new list for the doctor
-    if(!patientList){
-       let newPatientList  = new PatientListSchema({doctorUsername: doctorUsername, patientList: []})
-       await newPatientList.save();
-    }
-
-    // check if patient is in doctor list
-    let existingPatientInDoctorList = await PatientListSchema.findOne({doctorUsername: doctorUsername, "patientList.patientUsername": patientUsername})
-
-    // return 200 if patient is already in patient list
-    if(existingPatientInDoctorList === null) {
-        return ({
-            success: true,
-            message: "Patient is not in the list",
-            code : 200
-        })
-    } else {
-        let patientList = await PatientListSchema.findOne({doctorUsername: doctorUsername})
-        if(patientList){
-            let newList = patientList?.patientList.filter(patient => patient.patientUsername !== patientUsername)
-            patientList.patientList = newList
-            await patientList?.save()
-        }
-        return ({
             success: true,
             message: "Patient has been removed",
-            code : 200
-        })
+            code: 200
+        }
     }
-
-
+    
 
     // add patient if false
 
@@ -74,6 +71,6 @@ async function add_patient(doctorUsername: string, patientUsername: string) : Pr
     // If it doesn't exist, create it
 
 
-}
 
-export default add_patient;
+
+export default remove_patient;

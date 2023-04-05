@@ -4,7 +4,7 @@ import PatientInfoModel from "../../models/patientInfo.model";
 import bcrypt from "bcrypt";
 import DoctorInfoModel from '../../models/doctorInfo.model';
 
-type RegisterDoctorParams = {
+export type RegisterDoctorParams = {
     email: string;
     password: string;
     username: string;
@@ -12,7 +12,7 @@ type RegisterDoctorParams = {
     lastname: string;
 };
 
-type RegisterDoctorResponse = {
+export type RegisterDoctorResponse = {
     success: boolean;
     message: string;
     statusCode: number;
